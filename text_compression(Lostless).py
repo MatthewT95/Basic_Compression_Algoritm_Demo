@@ -9,7 +9,7 @@ compression_mode = "" # varible storing compression mode (compress | decompress)
 source_type = "" # varible storing source_type mode (user_input | file)
 file_content ="" # varible storing loaded file content
 partial_max_size = 8 # max size for substrings to search for
-lookback_window_max = 256
+lookback_window_max = 200 # look back window size, must be less then 255
 valid_input = False # varible stores weither input was valid
 user_input = ""
 file_reader = ""
@@ -95,3 +95,26 @@ else:
         exit()
 
 # if compression mode is compress
+if compression_mode == "compress":
+    postion = 0 # current postion in uncompressed text
+    lookback_window = "" # current look back window
+    compression_buffer = "" # compression_buffer
+    lookback_pointer = 0 # number of steps back to partial begining
+    partial_size = 0 # size of the partial string found
+    # while loop until end of uncompressed text
+        # update loop back window
+        # loop over all substrings at postion with length starting at partial_max_size
+            # search for string in look back window
+            # if partial found
+                # calculate look_back_pointer
+                # update partial_size
+                # append byte repressing lookbackpointer to compression_buffer
+                # append btye repressing partial_size to compression_buffer
+            # incremeant postion by partial_size
+        # if partial not found
+            # append byte representing zero pointer
+            # append charter at postion to compression_buffer
+            # incremeant postion by 1 to compression_buffer
+    
+    # set compressed_text to compressed_buffer
+
