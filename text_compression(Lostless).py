@@ -1,4 +1,6 @@
 import os
+from time import sleep
+from traceback import print_tb
 
 uncompressed_text = "" # varible storing uncompressed text
 compressed_text = "" # varible storing compressed without string library
@@ -8,11 +10,18 @@ verbose_mode = False # varible storing setting for verbose mode
 compression_mode = "" # varible storing compression mode (compress | decompress)
 source_type = "" # varible storing source_type mode (user_input | file)
 file_content ="" # varible storing loaded file content
-partial_max_size = 8 # max size for substrings to search for
+partial_max_size = 64 # max size for substrings to search for
 lookback_window_max = 200 # look back window size, must be less then 255
 valid_input = False # varible stores weither input was valid
 user_input = ""
 file_reader = ""
+
+def string_to_numbers(input_string):
+    output = ""
+    for i in range(0,len(input_string)):
+        output=output+str(ord(input_string[i])) + " "
+
+    return (output)
 
 # Ask user if they wish to compress or decompress
 valid_input = False
@@ -81,7 +90,7 @@ else:
         if compression_mode == "compress":
             # set uncompressed_text to file_contents
             uncompressed_text = file_content
-            #print("compress: " + uncompressed_text)
+            # print("compress: " + uncompressed_text)
         # if compression_mode is decompress
         else:
             # set compressed_data to file_contents
@@ -102,19 +111,39 @@ if compression_mode == "compress":
     lookback_pointer = 0 # number of steps back to partial begining
     partial_size = 0 # size of the partial string found
     # while loop until end of uncompressed text
+    while postion < len(uncompressed_text):
         # update loop back window
+        if postion < lookback_window_max:
+            lookback_window = uncompressed_text[0:postion]
+        else:
+            lookback_window = uncompressed_text[(postion-lookback_window_max):postion]
+        partial_found_in_lookback = False
         # loop over all substrings at postion with length starting at partial_max_size
+        for sustring_size in range(min(partial_max_size,len(uncompressed_text)-postion),0,-1):
             # search for string in look back window
+            partial_postion_in_lookback_window = lookback_window.find(uncompressed_text[postion:postion+sustring_size])
             # if partial found
+            if partial_postion_in_lookback_window != -1:
+                partial_found_in_lookback = True
                 # calculate look_back_pointer
+                lookback_pointer = len(lookback_window) - partial_postion_in_lookback_window
                 # update partial_size
+                partial_size = sustring_size
                 # append byte repressing lookbackpointer to compression_buffer
+                compression_buffer = compression_buffer + chr(lookback_pointer)
                 # append btye repressing partial_size to compression_buffer
-            # incremeant postion by partial_size
+                compression_buffer = compression_buffer + chr(partial_size)
+                # incremeant postion by partial_size
+                postion=postion+partial_size
         # if partial not found
+        if not partial_found_in_lookback:
             # append byte representing zero pointer
+            compression_buffer = compression_buffer + chr(255)
             # append charter at postion to compression_buffer
+            compression_buffer = compression_buffer + uncompressed_text[postion]
             # incremeant postion by 1 to compression_buffer
-    
+            postion=postion+1
     # set compressed_text to compressed_buffer
-
+    compressed_text = compression_buffer
+    print(string_to_numbers(compressed_text))
+    print(len(compressed_text),len(uncompressed_text))
