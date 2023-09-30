@@ -87,7 +87,7 @@ else:
     if os.path.isfile(source_filename):
         #print("file exists.")
         # load file using source_filename and store content in file_contents
-        file_reader = open(source_filename, "r")
+        file_reader = open(source_filename, "r",encoding="utf8")
         file_content = file_reader.read()
         # if compression_mode is compress
         if compression_mode == "compress":
