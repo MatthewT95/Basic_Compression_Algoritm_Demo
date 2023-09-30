@@ -12,11 +12,11 @@ source_type = "" # varible storing source_type mode (user_input | file)
 file_content ="" # varible storing loaded file content
 PARTIAL_MAX_SIZE = 7 # max size for substrings to search for. Must be less then 16
 BITS_FOR_SIZE_PORTION = 3
-lookback_window_max = 900 # look back window size, must be less then 255
+lookback_window_max = 4000 # look back window size, must be less then 255
 valid_input = False # varible stores weither input was valid
 user_input = ""
 file_reader = ""
-MAX_LOOKBACK_POINTER = 1000
+MAX_LOOKBACK_POINTER = 5000
 
 def string_to_numbers(input_string):
     output = ""
@@ -159,4 +159,4 @@ if compression_mode == "compress":
     # set compressed_text to compressed_buffer
     compressed_text = compression_buffer
     print(compressed_string_breakdown(compressed_text))
-    print(utf8len(compressed_text),utf8len(uncompressed_text))
+    print(utf8len(compressed_text),utf8len(uncompressed_text),utf8len(compressed_text) / utf8len(uncompressed_text))
